@@ -18,3 +18,5 @@ Printar na tela o resultado do cálculo
 Testes
 
 <img align="left" width="250" height="500" src="/Calculadora.png">
+
+<img align="left" width="250" height="500" src="/CalculadoraLista.png">

@@ -1,7 +1,8 @@
+import 'imc.dart';
+
 class Pessoa {
   String nome;
-  double peso;
-  double altura;
+  List<IMC> imcs;
 
-  Pessoa(this.nome, this.peso, this.altura);
+  Pessoa(this.nome, this.imcs);
 }

@@ -1,6 +1,8 @@
 import 'package:calculadoraimc/pessoa.dart';
 import 'package:flutter/material.dart';
 
+import 'imc.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,9 +33,11 @@ class _CalculadoraIMCState extends State<CalculadoraIMC> {
   String classificacao = "";
 
   Pessoa? pessoa;
+  List<IMC> imcs = [];
 
   void calcularIMC() {
     String nome = _controllerNome.text;
+    pessoa = Pessoa(_controllerNome.text, imcs!);
     double? peso = double.tryParse(_controllerPeso.text);
     double? alturaEmCentimetros = double.tryParse(_controllerAltura.text);
 
@@ -45,7 +49,8 @@ class _CalculadoraIMCState extends State<CalculadoraIMC> {
         resultadoIMC = imc;
         classificacao = _classificarIMC(imc);
       });
-      pessoa = Pessoa(_controllerNome.text, peso!, alturaEmCentimetros!);
+      IMC imcCalculado = IMC(peso, alturaEmCentimetros, resultadoIMC!);
+      pessoa?.imcs.add(imcCalculado);
     }
   }
 
@@ -177,13 +182,40 @@ class _CalculadoraIMCState extends State<CalculadoraIMC> {
               ? Column(
                   children: <Widget>[
                     Text(
-                      'Resultado do IMC de ${pessoa?.nome}\nIMC: ${resultadoIMC?.toStringAsFixed(2)}\nClassificação: $classificacao',
+                      'Resultado do IMC de ${pessoa?.nome}\nO IMC atual é: ${resultadoIMC?.toStringAsFixed(2)}\nClassificação: $classificacao',
                       style: const TextStyle(
                         color: Colors.black,
                         //fontWeight: FontWeight.bold,
                         fontSize: 16.0,
                         fontFamily: 'Roboto',
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Histórico',
+                      style: TextStyle(
+                        color: Colors.black,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        fontFamily: 'Roboto',
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    DataTable(
+                      columns: const [
+                        DataColumn(label: Text('Peso')),
+                        DataColumn(label: Text('Altura')),
+                        DataColumn(label: Text('IMC')),
+                      ],
+                      rows: imcs.map((imc) {
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(imc.peso.toStringAsFixed(2))),
+                            DataCell(Text(imc.altura.toStringAsFixed(2))),
+                            DataCell(Text(imc.resultadoIMC.toStringAsFixed(2))),
+                          ],
+                        );
+                      }).toList(),
                     ),
                   ],
                 )
